@@ -4,8 +4,8 @@ PKG             := boost
 $(PKG)_WEBSITE  := https://www.boost.org/
 $(PKG)_DESCR    := Boost C++ Library
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.60.0
-$(PKG)_CHECKSUM := 686affff989ac2488f79a97b9479efb9f2abae035b5ed4d8226de6857933fd3b
+$(PKG)_VERSION  := 1.70.0
+$(PKG)_CHECKSUM := 430ae8354789de4fd19ee52f3b1f739e1fba576f0aded0897c3c2bc00fb38778
 $(PKG)_SUBDIR   := boost_$(subst .,_,$($(PKG)_VERSION))
 $(PKG)_FILE     := boost_$(subst .,_,$($(PKG)_VERSION)).tar.bz2
 $(PKG)_URL      := https://$(SOURCEFORGE_MIRROR)/project/boost/boost/$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -69,20 +69,21 @@ define $(PKG)_BUILD
     echo 'set(Boost_THREADAPI "win32")' > '$(CMAKE_TOOLCHAIN_DIR)/$(PKG).cmake'
 
     '$(TARGET)-g++' \
-        -W -Wall -Werror -ansi -U__STRICT_ANSI__ -pedantic \
+        -std=c++11 -W -Wall -Werror -pedantic \
         '$(PWD)/src/$(PKG)-test.cpp' -o '$(PREFIX)/$(TARGET)/bin/test-boost.exe' \
         -DBOOST_THREAD_USE_LIB \
-        -lboost_serialization-mt \
-        -lboost_thread_win32-mt \
-        -lboost_system-mt \
-        -lboost_chrono-mt \
-        -lboost_context-mt
+        -lboost_serialization-mt-x$(BITS) \
+        -lboost_thread-mt-x$(BITS) \
+        -lboost_system-mt-x$(BITS) \
+        -lboost_chrono-mt-x$(BITS) \
+        -lboost_context-mt-x$(BITS)
 
     # test cmake
     mkdir '$(1).test-cmake'
     cd '$(1).test-cmake' && '$(TARGET)-cmake' \
         -DPKG=$(PKG) \
         -DPKG_VERSION=$($(PKG)_VERSION) \
+				-DCMAKE_CXX_FLAGS=-std=c++11 \
         '$(PWD)/src/cmake/test'
     $(MAKE) -C '$(1).test-cmake' -j 1 install
 endef
