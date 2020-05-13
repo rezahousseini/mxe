@@ -50,7 +50,7 @@ define $(PKG)_BUILD
         threading=multi \
         variant=release \
         toolset=gcc-mxe \
-        --layout=tagged \
+        --layout=system \
         --disable-icu \
         --without-mpi \
         --without-python \
@@ -62,9 +62,6 @@ define $(PKG)_BUILD
         -sEXPAT_LIBPATH='$(PREFIX)/$(TARGET)/lib' \
         install
 
-    $(if $(BUILD_SHARED), \
-        mv -fv '$(PREFIX)/$(TARGET)/lib/'libboost_*.dll '$(PREFIX)/$(TARGET)/bin/')
-
     # setup cmake toolchain
     echo 'set(Boost_THREADAPI "win32")' > '$(CMAKE_TOOLCHAIN_DIR)/$(PKG).cmake'
 
@@ -72,11 +69,11 @@ define $(PKG)_BUILD
         -std=c++11 -W -Wall -Werror -pedantic \
         '$(PWD)/src/$(PKG)-test.cpp' -o '$(PREFIX)/$(TARGET)/bin/test-boost.exe' \
         -DBOOST_THREAD_USE_LIB \
-        -lboost_serialization-mt-x$(BITS) \
-        -lboost_thread-mt-x$(BITS) \
-        -lboost_system-mt-x$(BITS) \
-        -lboost_chrono-mt-x$(BITS) \
-        -lboost_context-mt-x$(BITS)
+        -lboost_serialization \
+        -lboost_thread \
+        -lboost_system \
+        -lboost_chrono \
+        -lboost_context
 
     # test cmake
     mkdir '$(1).test-cmake'
