@@ -1,0 +1,14 @@
+diff -Naur Python-3.8.0-orig/Modules/_stat.c Python-3.8.0/Modules/_stat.c
+--- Python-3.8.3-orig/Modules/_stat.c	2020-05-13 19:31:54.000000000 +0200
++++ Python-3.8.3/Modules/_stat.c	2020-07-08 09:55:38.786896300 +0200
+@@ -40,6 +40,10 @@
+ #  define FILE_ATTRIBUTE_NO_SCRUB_DATA 0x20000
+ #endif
+ 
++#ifndef IO_REPARSE_TAG_APPEXECLINK
++#  define IO_REPARSE_TAG_APPEXECLINK 0x8000001BL
++#endif
++
+ #endif /* MS_WINDOWS */
+ 
+ /* From Python's stat.py */
