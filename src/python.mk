@@ -51,7 +51,6 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(BUILD_DIR)' -j 1 install DESTDIR=$(DESTDIR) $(MXE_DISABLE_CRUFT) \
 			CC=$(TARGET)-gcc
 
-	$(if $(BUILD_STATIC), \
-		, \
+	$(if $(BUILD_SHARED), \
 		cp -f "$(PREFIX)/$(TARGET)/lib/python$($(PKG)_basever)/config-$($(PKG)_basever)/libpython$($(PKG)_basever).dll.a" "$(PREFIX)/$(TARGET)/lib/libpython$($(PKG)_basever).dll.a")
 endef
